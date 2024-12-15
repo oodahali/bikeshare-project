@@ -45,6 +45,20 @@ def get_filters():
     print('-'*40)
     return city, month, day
 
+def filter_data(df, column, value):
+    """
+    Filters the DataFrame based on the given column and value.
+    Args:
+        df (DataFrame): The DataFrame to filter.
+        column (str): The column name to filter by.
+        value (str or int): The value to filter for (or 'all' to skip filtering).
+    Returns:
+        DataFrame: The filtered DataFrame.
+    """
+    if value != 'all':
+        return df[df[column] == value]
+    return df
+
 def load_data(city, month, day):
     """
     Loads data for the specified city and filters by month and day if applicable.
@@ -61,7 +75,7 @@ def load_data(city, month, day):
     # Convert Start Time to datetime
     df['Start Time'] = pd.to_datetime(df['Start Time'])
     
-    # Extract month and day of week
+    # Extract month, day of week, and hour
     df['month'] = df['Start Time'].dt.month
     df['day_of_week'] = df['Start Time'].dt.day_name().str.lower()
     df['hour'] = df['Start Time'].dt.hour
@@ -69,11 +83,10 @@ def load_data(city, month, day):
     # Filter by month
     if month != 'all':
         month_index = ['january', 'february', 'march', 'april', 'may', 'june'].index(month) + 1
-        df = df[df['month'] == month_index]
+        df = filter_data(df, 'month', month_index)
     
     # Filter by day of week
-    if day != 'all':
-        df = df[df['day_of_week'] == day]
+    df = filter_data(df, 'day_of_week', day)
     
     return df
 
@@ -187,7 +200,7 @@ def main():
         city, month, day = get_filters()
         df = load_data(city, month, day)
 
-        display_raw_data(df)  # New function call to display raw data
+        display_raw_data(df)
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
