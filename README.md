@@ -19,5 +19,6 @@ Run the script and follow the prompts to explore bikeshare data.
 ## Requirements
 - Python 3.x
 - Pandas and NumPy libraries
+- [GitHub Repository Link](https://github.com/oodahali/bikeshare-project)
 
 ## Example
